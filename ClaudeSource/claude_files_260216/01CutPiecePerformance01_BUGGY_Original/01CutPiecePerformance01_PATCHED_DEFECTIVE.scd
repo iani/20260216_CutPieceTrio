@@ -195,7 +195,7 @@ s.waitForBoot({
 		\octave, Pwrand([4, 5], [0.7, 0.3], inf),
 		\dur, Pwrand([0.5, 1, 2], [0.5, 0.3, 0.2], inf),
 		\amp, Pwhite(0.2, 0.35),
-		\cutoff, Pfunc({ ~cutPiece.gui.s1FilterVal ? 2000 }),
+		\cutoff, Pfunc({ ~cutPiece.gUi.s1FilterVal ? 2000 }),
 		\out, ~cutPiece.reverbBus
 	);
 	
@@ -205,7 +205,7 @@ s.waitForBoot({
 		\degree, Pseq([0, 2, 4, 7, 9, 7, 4, 2], inf),
 		\octave, 5,
 		\dur, 0.25,
-		\amp, Pfunc({ ~cutPiece.gui.s1ArpVal ? 50 }) / 200,
+		\amp, Pfunc({ ~cutPiece.gUi.s1ArpVal ? 50 }) / 200,
 		\out, ~cutPiece.reverbBus
 	);
 	
@@ -213,11 +213,11 @@ s.waitForBoot({
 	~cutPiece.patterns.section2Texture = Pbind(
 		\instrument, \fmSynth,
 		\freq, Pwhite(200, 800),
-		\modRatio, Pfunc({ ~cutPiece.gui.s2HarmVal ? 60 }) / 20,
+		\modRatio, Pfunc({ ~cutPiece.gUi.s2HarmVal ? 60 }) / 20,
 		\modIndex, Pwhite(3, 8),
 		\dur, Pwrand([2, 3, 4], [0.5, 0.3, 0.2], inf),
 		\sustain, 2,
-		\amp, Pfunc({ ~cutPiece.gui.s2BreathVal ? 40 }) / 150,
+		\amp, Pfunc({ ~cutPiece.gUi.s2BreathVal ? 40 }) / 150,
 		\out, ~cutPiece.reverbBus
 	);
 	
@@ -249,38 +249,38 @@ s.waitForBoot({
 	~cutPiece.state.players = ();
 	
 	// ===== GUI =====
-	~cutPiece.gui = ();
-	~cutPiece.gui.window = Window("✂️ CUT PIECE Performance Control", Rect(100, 100, 900, 700))
+	~cutPiece.gUi = ();
+	~cutPiece.gUi.wIndow = Window("✂️ CUT PIECE Performance Control", Rect(100, 100, 900, 700))
 		.front
 		.alwaysOnTop_(true);
 	
-	~cutPiece.gui.layout = VLayout();
-	~cutPiece.gui.window.layout = ~cutPiece.gui.layout;
+	~cutPiece.gUi.layout = VLayout();
+	~cutPiece.gUi.wIndow.layout = ~cutPiece.gUi.layout;
 	
 	// Title
-	~cutPiece.gui.layout.add(
+	~cutPiece.gUi.layout.add(
 		StaticText().string_("CUT PIECE - Sound Performance System")
 			.font_(Font("Arial", 24, true))
 			.align_(\center)
 	);
 	
-	~cutPiece.gui.layout.add(
+	~cutPiece.gUi.layout.add(
 		StaticText().string_("Live sound for Yoshiya Yoshimitsu's Object Theatre Performance")
 			.font_(Font("Arial", 12))
 			.align_(\center)
 	);
 	
-	~cutPiece.gui.layout.add(nil); // Spacer
+	~cutPiece.gUi.layout.add(nil); // Spacer
 	
 	// Master controls
-	~cutPiece.gui.masterBox = VLayout();
-	~cutPiece.gui.layout.add(~cutPiece.gui.masterBox);
+	~cutPiece.gUi.masterBox = VLayout();
+	~cutPiece.gUi.layout.add(~cutPiece.gUi.masterBox);
 	
-	~cutPiece.gui.masterBox.add(
+	~cutPiece.gUi.masterBox.add(
 		StaticText().string_("🎭 MASTER CONTROLS").font_(Font("Arial", 16, true))
 	);
 	
-	~cutPiece.gui.masterVol = EZSlider(
+	~cutPiece.gUi.masterVol = EZSlider(
 		label: "Master Volume",
 		controlSpec: ControlSpec(-40, 0, \lin, 1, -12),
 		action: { |ez|
@@ -289,157 +289,157 @@ s.waitForBoot({
 		initVal: -12,
 		labelWidth: 120
 	);
-	~cutPiece.gui.masterBox.add(~cutPiece.gui.masterVol);
+	~cutPiece.gUi.masterBox.add(~cutPiece.gUi.masterVol.view);
 	
 	// Section buttons
-	~cutPiece.gui.sectionButtons = HLayout();
-	~cutPiece.gui.layout.add(~cutPiece.gui.sectionButtons);
+	~cutPiece.gUi.sectionButtons = HLayout();
+	~cutPiece.gUi.layout.add(~cutPiece.gUi.sectionButtons);
 	
-	~cutPiece.gui.sec1Btn = Button()
+	~cutPiece.gUi.sec1Btn = Button()
 		.states_([["SECTION 1: Introduction", Color.white, Color.blue]])
 		.action_({ ~cutPiece.activateSection.(1); });
 	
-	~cutPiece.gui.sec2Btn = Button()
+	~cutPiece.gUi.sec2Btn = Button()
 		.states_([["SECTION 2: Interaction", Color.white, Color.magenta]])
 		.action_({ ~cutPiece.activateSection.(2); });
 	
-	~cutPiece.gui.sec3Btn = Button()
+	~cutPiece.gUi.sec3Btn = Button()
 		.states_([["SECTION 3: Dissolution", Color.white, Color.red(0.5)]])
 		.action_({ ~cutPiece.activateSection.(3); });
 	
-	~cutPiece.gui.stopBtn = Button()
+	~cutPiece.gUi.stopBtn = Button()
 		.states_([["⏹ STOP ALL", Color.white, Color.red]])
 		.action_({ ~cutPiece.stopAll.(); });
 	
-	~cutPiece.gui.sectionButtons.add(~cutPiece.gui.sec1Btn);
-	~cutPiece.gui.sectionButtons.add(~cutPiece.gui.sec2Btn);
-	~cutPiece.gui.sectionButtons.add(~cutPiece.gui.sec3Btn);
-	~cutPiece.gui.sectionButtons.add(~cutPiece.gui.stopBtn);
+	~cutPiece.gUi.sectionButtons.add(~cutPiece.gUi.sec1Btn);
+	~cutPiece.gUi.sectionButtons.add(~cutPiece.gUi.sec2Btn);
+	~cutPiece.gUi.sectionButtons.add(~cutPiece.gUi.sec3Btn);
+	~cutPiece.gUi.sectionButtons.add(~cutPiece.gUi.stopBtn);
 	
 	// ===== SECTION 1 CONTROLS =====
-	~cutPiece.gui.s1Box = VLayout();
-	~cutPiece.gui.layout.add(~cutPiece.gui.s1Box);
+	~cutPiece.gUi.s1Box = VLayout();
+	~cutPiece.gUi.layout.add(~cutPiece.gUi.s1Box);
 	
-	~cutPiece.gui.s1Box.add(
+	~cutPiece.gUi.s1Box.add(
 		StaticText().string_("🎎 SECTION 1: Introduction (Playful/Anticipatory)")
 			.font_(Font("Arial", 14, true))
 			.background_(Color.blue(0.3, 0.3))
 	);
 	
-	~cutPiece.gui.s1Speed = EZSlider(
+	~cutPiece.gUi.s1Speed = EZSlider(
 		label: "Melody Speed",
 		controlSpec: ControlSpec(0.5, 4, \lin, 0.1, 2),
 		labelWidth: 120
 	);
-	~cutPiece.gui.s1Box.add(~cutPiece.gui.s1Speed);
+	~cutPiece.gUi.s1Box.add(~cutPiece.gUi.s1Speed.view);
 	
-	~cutPiece.gui.s1Arp = EZSlider(
+	~cutPiece.gUi.s1Arp = EZSlider(
 		label: "Arpeggio Amount",
 		controlSpec: ControlSpec(0, 100, \lin, 1, 50),
-		action: { |ez| ~cutPiece.gui.s1ArpVal = ez.value; },
+		action: { |ez| ~cutPiece.gUi.s1ArpVal = ez.value; },
 		labelWidth: 120
 	);
-	~cutPiece.gui.s1Box.add(~cutPiece.gui.s1Arp);
+	~cutPiece.gUi.s1Box.add(~cutPiece.gUi.s1Arp.view);
 	
-	~cutPiece.gui.s1Filter = EZSlider(
+	~cutPiece.gUi.s1Filter = EZSlider(
 		label: "Filter Cutoff",
 		controlSpec: ControlSpec(200, 5000, \exp, 10, 2000),
-		action: { |ez| ~cutPiece.gui.s1FilterVal = ez.value; },
+		action: { |ez| ~cutPiece.gUi.s1FilterVal = ez.value; },
 		labelWidth: 120
 	);
-	~cutPiece.gui.s1Box.add(~cutPiece.gui.s1Filter);
+	~cutPiece.gUi.s1Box.add(~cutPiece.gUi.s1Filter.view);
 	
-	~cutPiece.gui.s1Glitch = EZSlider(
+	~cutPiece.gUi.s1Glitch = EZSlider(
 		label: "Glitch/Noise",
 		controlSpec: ControlSpec(0, 100, \lin, 1, 20),
 		labelWidth: 120
 	);
-	~cutPiece.gui.s1Box.add(~cutPiece.gui.s1Glitch);
+	~cutPiece.gUi.s1Box.add(~cutPiece.gUi.s1Glitch.view);
 	
-	~cutPiece.gui.s1Sparkle = Button()
+	~cutPiece.gUi.s1Sparkle = Button()
 		.states_([["✨ TRIGGER SPARKLE", Color.white, Color.cyan]])
 		.action_({ ~cutPiece.triggerSparkle.(); });
-	~cutPiece.gui.s1Box.add(~cutPiece.gui.s1Sparkle);
+	~cutPiece.gUi.s1Box.add(~cutPiece.gUi.s1Sparkle);
 	
 	// ===== SECTION 2 CONTROLS =====
-	~cutPiece.gui.s2Box = VLayout();
-	~cutPiece.gui.layout.add(~cutPiece.gui.s2Box);
+	~cutPiece.gUi.s2Box = VLayout();
+	~cutPiece.gUi.layout.add(~cutPiece.gUi.s2Box);
 	
-	~cutPiece.gui.s2Box.add(
+	~cutPiece.gUi.s2Box.add(
 		StaticText().string_("💕 SECTION 2: Interaction (Flirtation/Cutting)")
 			.font_(Font("Arial", 14, true))
 			.background_(Color.magenta(0.3, 0.3))
 	);
 	
-	~cutPiece.gui.s2Pulse = EZSlider(
+	~cutPiece.gUi.s2Pulse = EZSlider(
 		label: "Pulse BPM",
 		controlSpec: ControlSpec(40, 180, \lin, 1, 72),
 		labelWidth: 120
 	);
-	~cutPiece.gui.s2Box.add(~cutPiece.gui.s2Pulse);
+	~cutPiece.gUi.s2Box.add(~cutPiece.gUi.s2Pulse.view);
 	
-	~cutPiece.gui.s2Breath = EZSlider(
+	~cutPiece.gUi.s2Breath = EZSlider(
 		label: "Breathing Texture",
 		controlSpec: ControlSpec(0, 100, \lin, 1, 40),
-		action: { |ez| ~cutPiece.gui.s2BreathVal = ez.value; },
+		action: { |ez| ~cutPiece.gUi.s2BreathVal = ez.value; },
 		labelWidth: 120
 	);
-	~cutPiece.gui.s2Box.add(~cutPiece.gui.s2Breath);
+	~cutPiece.gUi.s2Box.add(~cutPiece.gUi.s2Breath.view);
 	
-	~cutPiece.gui.s2Harm = EZSlider(
+	~cutPiece.gUi.s2Harm = EZSlider(
 		label: "Synth Harmonics",
 		controlSpec: ControlSpec(0, 100, \lin, 1, 60),
-		action: { |ez| ~cutPiece.gui.s2HarmVal = ez.value; },
+		action: { |ez| ~cutPiece.gUi.s2HarmVal = ez.value; },
 		labelWidth: 120
 	);
-	~cutPiece.gui.s2Box.add(~cutPiece.gui.s2Harm);
+	~cutPiece.gUi.s2Box.add(~cutPiece.gUi.s2Harm.view);
 	
-	~cutPiece.gui.s2Buttons = HLayout();
+	~cutPiece.gUi.s2Buttons = HLayout();
 	
-	~cutPiece.gui.s2Cut = Button()
+	~cutPiece.gUi.s2Cut = Button()
 		.states_([["✂️ CUTTING SOUND", Color.white, Color.red(0.7)]])
 		.action_({ Synth(\cuttingSound, [\out, ~cutPiece.masterBus, \amp, 0.6]); });
 	
-	~cutPiece.gui.s2Flirt = Button()
+	~cutPiece.gUi.s2Flirt = Button()
 		.states_([["💋 FLIRT GESTURE", Color.white, Color.magenta]])
 		.action_({ ~cutPiece.triggerFlirt.(); });
 	
-	~cutPiece.gui.s2Buttons.add(~cutPiece.gui.s2Cut);
-	~cutPiece.gui.s2Buttons.add(~cutPiece.gui.s2Flirt);
-	~cutPiece.gui.s2Box.add(~cutPiece.gui.s2Buttons);
+	~cutPiece.gUi.s2Buttons.add(~cutPiece.gUi.s2Cut);
+	~cutPiece.gUi.s2Buttons.add(~cutPiece.gUi.s2Flirt);
+	~cutPiece.gUi.s2Box.add(~cutPiece.gUi.s2Buttons);
 	
 	// ===== SECTION 3 CONTROLS =====
-	~cutPiece.gui.s3Box = VLayout();
-	~cutPiece.gui.layout.add(~cutPiece.gui.s3Box);
+	~cutPiece.gUi.s3Box = VLayout();
+	~cutPiece.gUi.layout.add(~cutPiece.gUi.s3Box);
 	
-	~cutPiece.gui.s3Box.add(
+	~cutPiece.gUi.s3Box.add(
 		StaticText().string_("⛪ SECTION 3: Dissolution (Passion Play/Ritual)")
 			.font_(Font("Arial", 14, true))
 			.background_(Color.red(0.3, 0.3))
 	);
 	
-	~cutPiece.gui.s3Drone = EZSlider(
+	~cutPiece.gUi.s3Drone = EZSlider(
 		label: "Drone Darkness",
 		controlSpec: ControlSpec(0, 100, \lin, 1, 50),
 		labelWidth: 120
 	);
-	~cutPiece.gui.s3Box.add(~cutPiece.gui.s3Drone);
+	~cutPiece.gUi.s3Box.add(~cutPiece.gUi.s3Drone.view);
 	
-	~cutPiece.gui.s3Choir = EZSlider(
+	~cutPiece.gUi.s3Choir = EZSlider(
 		label: "Choir/Vocal",
 		controlSpec: ControlSpec(0, 100, \lin, 1, 30),
 		labelWidth: 120
 	);
-	~cutPiece.gui.s3Box.add(~cutPiece.gui.s3Choir);
+	~cutPiece.gUi.s3Box.add(~cutPiece.gUi.s3Choir.view);
 	
-	~cutPiece.gui.s3Frag = EZSlider(
+	~cutPiece.gUi.s3Frag = EZSlider(
 		label: "Fragmentation",
 		controlSpec: ControlSpec(0, 100, \lin, 1, 40),
 		labelWidth: 120
 	);
-	~cutPiece.gui.s3Box.add(~cutPiece.gui.s3Frag);
+	~cutPiece.gUi.s3Box.add(~cutPiece.gUi.s3Frag.view);
 	
-	~cutPiece.gui.s3Reverb = EZSlider(
+	~cutPiece.gUi.s3Reverb = EZSlider(
 		label: "Reverb Space",
 		controlSpec: ControlSpec(0.5, 10, \exp, 0.1, 3),
 		action: { |ez|
@@ -447,27 +447,27 @@ s.waitForBoot({
 		},
 		labelWidth: 120
 	);
-	~cutPiece.gui.s3Box.add(~cutPiece.gui.s3Reverb);
+	~cutPiece.gUi.s3Box.add(~cutPiece.gUi.s3Reverb.view);
 	
-	~cutPiece.gui.s3Buttons = HLayout();
+	~cutPiece.gUi.s3Buttons = HLayout();
 	
-	~cutPiece.gui.s3Ritual = Button()
+	~cutPiece.gUi.s3Ritual = Button()
 		.states_([["🕊️ RITUAL MOMENT", Color.white, Color.new(0.4, 0.2, 0.5)]])
 		.action_({ ~cutPiece.triggerRitual.(); });
 	
-	~cutPiece.gui.s3Wash = Button()
+	~cutPiece.gUi.s3Wash = Button()
 		.states_([["🌊 WASHING (Pilate)", Color.white, Color.cyan(0.6)]])
 		.action_({ ~cutPiece.triggerWash.(); });
 	
-	~cutPiece.gui.s3Buttons.add(~cutPiece.gui.s3Ritual);
-	~cutPiece.gui.s3Buttons.add(~cutPiece.gui.s3Wash);
-	~cutPiece.gui.s3Box.add(~cutPiece.gui.s3Buttons);
+	~cutPiece.gUi.s3Buttons.add(~cutPiece.gUi.s3Ritual);
+	~cutPiece.gUi.s3Buttons.add(~cutPiece.gUi.s3Wash);
+	~cutPiece.gUi.s3Box.add(~cutPiece.gUi.s3Buttons);
 	
 	// Initialize GUI values
-	~cutPiece.gui.s1ArpVal = 50;
-	~cutPiece.gui.s1FilterVal = 2000;
-	~cutPiece.gui.s2BreathVal = 40;
-	~cutPiece.gui.s2HarmVal = 60;
+	~cutPiece.gUi.s1ArpVal = 50;
+	~cutPiece.gUi.s1FilterVal = 2000;
+	~cutPiece.gUi.s2BreathVal = 40;
+	~cutPiece.gUi.s2HarmVal = 60;
 	
 	// ===== PERFORMANCE FUNCTIONS =====
 	
@@ -492,7 +492,7 @@ s.waitForBoot({
 				// Section 2: Interaction
 				~cutPiece.state.players.pulse = Synth(\heartPulse, [
 					\out, ~cutPiece.masterBus,
-					\freq, ~cutPiece.gui.s2Pulse.value,
+					\freq, ~cutPiece.gUi.s2Pulse.value,
 					\amp, 0.35
 				], ~cutPiece.groups.section2);
 				
@@ -511,30 +511,30 @@ s.waitForBoot({
 				~cutPiece.state.players.drone = Synth(\darkDrone, [
 					\out, ~cutPiece.reverbBus,
 					\freq, 65,
-					\amp, ~cutPiece.gui.s3Drone.value.linlin(0, 100, 0.1, 0.5)
+					\amp, ~cutPiece.gUi.s3Drone.value.linlin(0, 100, 0.1, 0.5)
 				], ~cutPiece.groups.section3);
 				
 				~cutPiece.state.players.choir1 = Synth(\choirVoice, [
 					\out, ~cutPiece.reverbBus,
 					\freq, 164.81,  // E3
-					\amp, ~cutPiece.gui.s3Choir.value.linlin(0, 100, 0, 0.3)
+					\amp, ~cutPiece.gUi.s3Choir.value.linlin(0, 100, 0, 0.3)
 				], ~cutPiece.groups.section3);
 				
 				~cutPiece.state.players.choir2 = Synth(\choirVoice, [
 					\out, ~cutPiece.reverbBus,
 					\freq, 196,  // G3
-					\amp, ~cutPiece.gui.s3Choir.value.linlin(0, 100, 0, 0.3)
+					\amp, ~cutPiece.gUi.s3Choir.value.linlin(0, 100, 0, 0.3)
 				], ~cutPiece.groups.section3);
 				
 				~cutPiece.state.players.choir3 = Synth(\choirVoice, [
 					\out, ~cutPiece.reverbBus,
 					\freq, 261.63,  // C4
-					\amp, ~cutPiece.gui.s3Choir.value.linlin(0, 100, 0, 0.3)
+					\amp, ~cutPiece.gUi.s3Choir.value.linlin(0, 100, 0, 0.3)
 				], ~cutPiece.groups.section3);
 				
 				~cutPiece.state.players.fragment = Synth(\fragmentNoise, [
 					\out, ~cutPiece.reverbBus,
-					\amp, ~cutPiece.gui.s3Frag.value.linlin(0, 100, 0, 0.25),
+					\amp, ~cutPiece.gUi.s3Frag.value.linlin(0, 100, 0, 0.25),
 					\density, 5
 				], ~cutPiece.groups.section3);
 				
@@ -615,7 +615,7 @@ s.waitForBoot({
 	};
 	
 	// ===== CLEANUP ON WINDOW CLOSE =====
-	~cutPiece.gui.window.onClose = {
+	~cutPiece.gUi.wIndow.onClose = {
 		~cutPiece.stopAll.();
 		~cutPiece.groups.fx.freeAll;
 		~cutPiece.masterBus.free;
