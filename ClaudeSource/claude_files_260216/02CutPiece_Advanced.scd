@@ -1,4 +1,9 @@
-/*
+/ERROR: Message 'asView' not understood.
+Perhaps you misspelled 'view', or meant to call 'asView' on another receiver?
+RECEIVER:
+Instance of EZSlider {    (0x148b94738, gc=F0, fmt=00, flg=00, set=05)
+  instance variables [21]
+*
 ========================================
 CUT PIECE - Advanced Performance Techniques
 Additional sounds and live coding patterns
