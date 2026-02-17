@@ -1,6 +1,7 @@
 // 
 ~climax = {
 	fork {
+		var synth;
 		"CLIMAX SEQUENCE".postln;
 		
 		// Rapid cuts
@@ -24,13 +25,15 @@
 		
 		// Restore with drone
 		// ~cutPiece.macro.restoreVolume.();
-		Synth(\darkDrone, [
+		synth = Synth(\darkDrone, [
 			\out, ~cutPiece.reverbBus,
 			\freq, 55,
 			\amp, 0.3
 		]
 		//,  ~cutPiece.groups.section3);
 		);
+		5.wait;
+		synth.release;
 	};
 }
 //:
