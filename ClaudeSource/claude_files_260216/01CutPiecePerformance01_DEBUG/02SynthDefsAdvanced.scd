@@ -17,7 +17,7 @@
 ~s.release;
 //:
 ~s = Synth(\shatter);
-~s.release;
+~s.release; // release not applicable
 //:
 ~s = Synth(\strings);
 ~s.release;
