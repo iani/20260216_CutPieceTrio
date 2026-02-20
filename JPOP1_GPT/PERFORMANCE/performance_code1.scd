@@ -25,8 +25,8 @@ s.waitForBoot({
 
 	TempoClock.default.tempo = 128/60; // 128 BPM
 
-	SynthDef(\jpKick, { |out=0, amp=0.9, freq = 6000 |
-		var env  = EnvGen.kr(Env.perc(0.001, 0.22, curve: -4), doneAction: 2);
+	SynthDef(\jpKick, { |out=0, amp=0.9, freq = 6000, envDur = 0.22 |
+		var env  = EnvGen.kr(Env.perc(0.001, envDur, curve: -4), doneAction: 2);
 		var fenv = EnvGen.kr(Env([80, 48, 32], [0.02, 0.18], curve: -6));
 		var click = HPF.ar(WhiteNoise.ar(0.2), freq) * EnvGen.kr(Env.perc(0.001, 0.02));
 		var body = SinOsc.ar(fenv.midicps) * env;
@@ -148,6 +148,7 @@ s.waitForBoot({
 
 	~kickAmp = 1;
 	~kickDur = 1;
+	~kickEnvDur = 0.22;
 	~kickFreq = 6000;
 	Pdef(\kick,
 		Pbind(
@@ -155,9 +156,12 @@ s.waitForBoot({
 			\dur, Pfunc { 1 * ~kickDur.next },
 			\amp, Pfunc { 0.95 * ~kickAmp.next },
 			\freq, Pfunc { 1 * ~kickFreq.next },
+			\envDur, Pfunc { ~kickEnvDur.next },
 			\finish, Pfunc { ~pump.set(\trig, 1); }
 		)); // .play;
 
+	~snareAmp = 1;
+	~snareDur = 1;
 	Pdef(\snare,
 		Pbind(
 			\instrument, \jpSnare,
@@ -176,7 +180,9 @@ s.waitForBoot({
 			\amp, 0.18,
 			\out, 0
 		)); // .play;
-
+	
+	~chordsAmp = 1;
+	~chordsDur = 1;
 	Pdef(\chords,
 		Pbind(
 			\instrument, \jpChord,
@@ -213,6 +219,8 @@ s.waitForBoot({
 			}
 		)); // .play;
 
+	~arpAmp = 1;
+	~arpTranspose = 0;
 	Pdef(\arp,
 		Pbind(
 			\instrument, \jpPluck,
@@ -220,13 +228,13 @@ s.waitForBoot({
 			// \out, 0,
 			\dur, 0.25,
 			// \amp, 0.12,
-			\amp, 0.72,
+			\amp, Pfunc { 0.72 * ~arpAmp.next },
 			\decay, Pwhite(1.2, 2.4),
 			\pan, Pwhite(-0.6, 0.6),
 			\midinote, Pfunc {
 				var tri = if(~curTri.isArray) { ~curTri } { [0,2,4] };
 				var d   = tri.choose + [0,7,14].choose;
-				~degToMidi.(d, 2)
+				~degToMidi.(d + ~arpTranspose.next, 2)
 			}
 		)); // .play;
 

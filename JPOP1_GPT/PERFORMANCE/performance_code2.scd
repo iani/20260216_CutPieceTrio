@@ -32,7 +32,7 @@
 //: 4. Fadeout voice by voice, at intervals growing by golden ratio
 
 var phi   = (1 + 5.sqrt) * 0.5;
-var base  = 1;       // in beats
+var base  = 5;       // in beats
 var q     = 4.asQuant;
 var t0    = q.nextTimeOnGrid(TempoClock.default);
 
@@ -100,8 +100,65 @@ Pdef(\lead).stop;
 ~kickAmp = Pseq((1..100).normalize.reverse, inf).asStream;
 ~kickAmp = 1;
 ~kickFreq = 10;
-~kickFreq = Pwhite(10, 10000, inf).asStream;
+~kickFreq = Pwhite(5000, 6000, inf).asStream;
+~kickEnvDur = 0.004;
+~kickEnvDur = 20.004;
+
+~snareDur = 2.5;
+~snareDur = 0.25;
+
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ], inf).asStream;
+~prog = Pseq([ [0,2,4], [0,2,4] + 3, [0,2,4] + 1, [0,2,4] + 4, [0,2,4] + 5 ], inf).asStream;
+Pdef(\chords).play;
+Pdef(\chords).stop;
+
+~prog = Pseq([ [0,4], [4,6], [5,2], [3,5] ] + 10, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] + 10, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 1, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 2, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 3, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 4, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 5, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 6, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 7, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 8, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 9, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 10, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 11, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 12, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 13, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 14, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 15, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 16, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 17, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 18, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 19, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 20, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 21, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 22, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 23, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 24, inf).asStream;
+~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 25, inf).asStream;
+~prog = Pseq([ [4], [6], [2], [3] ] + 10, inf).asStream;
+~prog = Pseq((-10..10).clump(3) + 10, inf).asStream;
+~prog = Pseq((-10..10).clump(2) + 10, inf).asStream;
+~prog = Pseq((-10..10).clump(1) + 10, inf).asStream;
+~prog = Pseq((-10..10).clump(4) + 10, inf).asStream;
+
 
 //: ------ debug runaway synths from Pdefs!!! ------
 ~startdefs.();
 ~stopdefs.();
+
+
+~startdefs.(\arp);
+~arpAmp = 2.1;
+~arpAmp = Pseq((1..100).normalize, inf).asStream;
+~arpAmp = Pseq((1..100).normalize.reverse, inf).asStream;
+~arpAmp = Pwhite(0, 1.0, inf).asStream;
+~arpTranspose = -10;
+~arpTranspose = 10;
+~arpTranspose = 1;
+~arpTranspose = Pstutter(12, Pseq((-10..10), inf)).asStream;
+~arpTranspose = Pstutter(12, Pseq((10..-30), inf)).asStream;
+
