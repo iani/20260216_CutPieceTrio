@@ -132,7 +132,7 @@ s.waitForBoot({
 			\instrument, \jpKick,
 			\dur, 1,
 			\amp, 0.95,
-			\finish, Pfunc { ~pump.set(\trig, 1); }
+			// \finish, Pfunc { ~pump.set(\trig, 1); }
 	)).play;
 
 	Pdef(\snare,
