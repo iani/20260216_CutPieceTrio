@@ -85,6 +85,7 @@ Pdef(\lead).stop;
 //: ------------- Selectively change beat dur of voices -------- 
 //: ---------------- Change kick cycle and amp
 ~startdefs.();
+~stopdefs.();
 ~kickAmp = 1;
 ~kickDur = 1.5;
 ~kickDur = 1;
@@ -107,6 +108,24 @@ Pdef(\lead).stop;
 ~snareDur = 2.5;
 ~snareDur = 0.25;
 
+//: ------ debug runaway synths from Pdefs!!! ------
+~startdefs.();
+~stopdefs.();
+~arpAmp = Pseq((1..100).normalize.reverse, inf).asStream; // !!!
+~arpTranspose = Pstutter(12, Pseq((10..-30), inf)).asStream; // !!!
+~startdefs.(\arp);
+~arpAmp = 2.1;
+~arpAmp = Pseq((1..100).normalize, inf).asStream;
+~arpAmp = Pseq((1..100).normalize.reverse, inf).asStream; // !!!
+~arpAmp = Pwhite(0, 1.0, inf).asStream;
+~arpTranspose = -10;
+~arpTranspose = 10;
+~arpTranspose = 1;
+~arpTranspose = Pstutter(12, Pseq((-10..10), inf)).asStream;
+~arpTranspose = Pstutter(12, Pseq((10..-30), inf)).asStream; // !!!
+
+
+//:
 ~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ], inf).asStream;
 ~prog = Pseq([ [0,2,4], [0,2,4] + 3, [0,2,4] + 1, [0,2,4] + 4, [0,2,4] + 5 ], inf).asStream;
 Pdef(\chords).play;
@@ -145,20 +164,4 @@ Pdef(\chords).stop;
 ~prog = Pseq((-10..10).clump(1) + 10, inf).asStream;
 ~prog = Pseq((-10..10).clump(4) + 10, inf).asStream;
 
-
-//: ------ debug runaway synths from Pdefs!!! ------
-~startdefs.();
-~stopdefs.();
-
-
-~startdefs.(\arp);
-~arpAmp = 2.1;
-~arpAmp = Pseq((1..100).normalize, inf).asStream;
-~arpAmp = Pseq((1..100).normalize.reverse, inf).asStream;
-~arpAmp = Pwhite(0, 1.0, inf).asStream;
-~arpTranspose = -10;
-~arpTranspose = 10;
-~arpTranspose = 1;
-~arpTranspose = Pstutter(12, Pseq((-10..10), inf)).asStream;
-~arpTranspose = Pstutter(12, Pseq((10..-30), inf)).asStream;
 
