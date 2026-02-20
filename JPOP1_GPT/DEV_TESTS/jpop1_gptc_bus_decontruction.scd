@@ -27,4 +27,5 @@ Pdef(\chords).stop;
 ~kickDur = 2.9;
 ~kickDur = 2.5;
 
-
+//:
+a = Synth(\jpPluck);

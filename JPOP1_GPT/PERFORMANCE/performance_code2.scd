@@ -111,6 +111,8 @@ Pdef(\lead).stop;
 //: ------ debug runaway synths from Pdefs!!! ------
 ~startdefs.();
 ~stopdefs.();
+//:
+
 ~arpAmp = Pseq((1..100).normalize.reverse, inf).asStream; // !!!
 ~arpTranspose = Pstutter(12, Pseq((10..-30), inf)).asStream; // !!!
 ~startdefs.(\arp);
