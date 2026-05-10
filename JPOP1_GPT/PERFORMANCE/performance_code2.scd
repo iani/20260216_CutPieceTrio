@@ -19,7 +19,7 @@
 // \kick, \snare, \hat, \chords, \bass, \arp, \lead
 //: 2 Enable selective starting and stopping of Pdefs
 ~pdefs = [\kick, \snare, \hat, \chords, \bass, \arp, \lead];
-~startdef = { | defname | Pdef(defname).play }; 
+~startdef = { | defname | Pdef(defname).play };
 ~stopdef = { | defname | Pdef(defname).stop };
 ~startdefs = { | defs |
 	(defs ?? { ~pdefs }).asArray do: { | d | ~startdef.(d) }
@@ -71,7 +71,7 @@ Pdef(\lead).stop;
 		{
 		Pdef(defname).play;
 		duration.wait;
-		Pdef(defname).stop;	
+		Pdef(defname).stop;
 		}.fork;
 	};
 
@@ -82,7 +82,7 @@ Pdef(\lead).stop;
 	};
 	"END".postln;
 }.fork;
-//: ------------- Selectively change beat dur of voices -------- 
+//: ------------- Selectively change beat dur of voices --------
 //: ---------------- Change kick cycle and amp
 ~startdefs.();
 ~stopdefs.();
@@ -110,10 +110,11 @@ Pdef(\lead).stop;
 
 //: ------ debug runaway synths from Pdefs!!! ------
 ~startdefs.();
-~stopdefs.();
+~stopdefs.(\chords);
 //:
 
 ~arpAmp = Pseq((1..100).normalize.reverse, inf).asStream; // !!!
+~arpAmp = Pseq((1..100).normalize, inf).asStream; // !!!
 ~arpTranspose = Pstutter(12, Pseq((10..-30), inf)).asStream; // !!!
 ~startdefs.(\arp);
 ~arpAmp = 2.1;
@@ -125,13 +126,17 @@ Pdef(\lead).stop;
 ~arpTranspose = 1;
 ~arpTranspose = Pstutter(12, Pseq((-10..10), inf)).asStream;
 ~arpTranspose = Pstutter(12, Pseq((10..-30), inf)).asStream; // !!!
-
+~durAmp = 2;
 
 //:
 ~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ], inf).asStream;
 ~prog = Pseq([ [0,2,4], [0,2,4] + 3, [0,2,4] + 1, [0,2,4] + 4, [0,2,4] + 5 ], inf).asStream;
 Pdef(\chords).play;
 Pdef(\chords).stop;
+Pdef(\arp).stop;
+~chordAmp = 0.1;
+~arpAmp = 0.9;
+~arpAmp = 0.00039;
 
 ~prog = Pseq([ [0,4], [4,6], [5,2], [3,5] ] + 10, inf).asStream;
 ~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] + 10, inf).asStream;
@@ -160,10 +165,8 @@ Pdef(\chords).stop;
 ~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 23, inf).asStream;
 ~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 24, inf).asStream;
 ~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ] - 25, inf).asStream;
-~prog = Pseq([ [4], [6], [2], [3] ] + 10, inf).asStream;
+~prog = Pseq([ [4], [6], [2], [3] ] + 11, inf).asStream;
 ~prog = Pseq((-10..10).clump(3) + 10, inf).asStream;
 ~prog = Pseq((-10..10).clump(2) + 10, inf).asStream;
 ~prog = Pseq((-10..10).clump(1) + 10, inf).asStream;
 ~prog = Pseq((-10..10).clump(4) + 10, inf).asStream;
-
-
