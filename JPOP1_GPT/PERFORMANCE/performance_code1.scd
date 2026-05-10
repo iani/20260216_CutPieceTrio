@@ -255,8 +255,27 @@ s.waitForBoot({
 			}
 		)); // .play;
 
+//: Addition 日 10  5月 2026 12:15
+//--------------------------------------------------------------------------------
+Pdef(\ostinato, Pbind(
+			\instrument, \jpChord,
+			\out, ~musicBus,
+			// \out, 0,
+			\dur, Prand([2, Pseq([1, 1], 1), Pseq([1, 2, 1], 1)], inf),
+			\amp, Prand([0.20, 0.40, 0.50, 0.70], inf),
+			\bright, Pseg(Pseq([0.45, 0.7, 0.55, 0.75], inf), 8),
+			\legato, 0.95,
+			\pan, Pwhite(-0.2, 0.2),
+			\degree, Pseq([0, 3, 4, 5], inf),
+			\octave, Pstutter(4, Prand([5, 3, 4, 6, 7], inf)),
+			\strum, 0.02
+			)
+); // .play;
+
+	
 	"J-Pop generator running!".postln;
 
+	
 	// Gradual Cut-out deconstruction of piece:
 	{
 		var dt; 

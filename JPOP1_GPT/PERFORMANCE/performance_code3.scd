@@ -1,3 +1,6 @@
+// Performance code for 2nd version: 2026-05-12 @ Ionia Vouli
+// AVARTS Fest
+
 // -------- List of SynthDefs --------
 // ---- A: Instrument sources
 // jpKick : kick drum
@@ -14,7 +17,8 @@
 // jpGlue : Effect. Adds modulated chorus delay and reverb.
 //: 1 LOAD --------------- SYNTHDEFS, PDEFS, BUSES --------------
 (PathName(Document.current.path).pathOnly +/+ "performance_code1.scd").load;
-
+//:
+~stopdefs.value;
 // -------- List of Pdefs --------
 // \kick, \snare, \hat, \chords, \bass, \arp, \lead
 //: 2 Enable selective starting and stopping of Pdefs
@@ -28,7 +32,16 @@
 	(defs ?? { ~pdefs }).asArray do: { | d | ~stopdef.(d) }
 };
 //: 3 ------------ start all Pdefs --------------
-~startdefs.();
+// Start defs gradually
+{
+	~pdefs.reverse do: { | defn |
+		Pdef(defn).play;
+		24.wait;
+	};
+}.fork;
+//:
+~stopdefs.value;
+// ~startdefs.();This version:  do not start all defs at once!
 //: 4. Fadeout voice by voice, at intervals growing by golden ratio
 
 var phi   = (1 + 5.sqrt) * 0.5;
@@ -84,15 +97,18 @@ Pdef(\lead).stop;
 }.fork;
 //: ------------- Selectively change beat dur of voices --------
 //: ---------------- Change kick cycle and amp
+//: some unisono actions - optional
 ~startdefs.();
+~stopdefs.([\hat, \snare, \bass]);
+//:
 ~stopdefs.();
+//:
 ~kickAmp = 1;
 ~kickDur = 1.5;
 ~kickDur = 1;
 ~kickDur = Pseq([0.5, 1.5, 0.1, 0.1, 2], inf).asStream;
 ~kickDur = Prand([0.5, 1.5, 0.1, 0.1, 2], inf).asStream;
 ~startdefs.(\kick);
-~stopdefs.([\hat, \snare, \bass]);
 ~stopdefs.(\kick);
 ~kickDur = 0.5;
 ~kickAmp = Pwhite(0.01, 0.9, inf).asStream;
@@ -132,6 +148,7 @@ Pdef(\lead).stop;
 ~prog = Pseq([ [0,2,4], [4,6,1], [5,0,2], [3,5,0] ], inf).asStream;
 ~prog = Pseq([ [0,2,4], [0,2,4] + 3, [0,2,4] + 1, [0,2,4] + 4, [0,2,4] + 5 ], inf).asStream;
 Pdef(\chords).play;
+Pdef(\arp).play;
 Pdef(\chords).stop;
 Pdef(\arp).stop;
 ~chordAmp = 0.1;
